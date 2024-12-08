@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 
 // Configure the HTTP request pipeline.
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 else
