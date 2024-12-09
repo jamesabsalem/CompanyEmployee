@@ -8,5 +8,10 @@ namespace Repository
         public CompanyRepository(RepositoryContest repositoryContest) : base(repositoryContest)
         {
         }
+
+        public IEnumerable<Company> GetAllCompanies(bool trackChanges) => 
+            FindAll(trackChanges)
+            .OrderBy(c => c.Name)
+            .ToList();
     }
 }
