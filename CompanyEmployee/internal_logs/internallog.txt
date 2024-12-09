@@ -288,3 +288,31 @@
 2024-12-09 13:47:41.6388 Debug FileTarget(Name=logfile): Preparing for new file: 'E:\CompanyEmployee\CompanyEmployee\bin\Debug\net9.0\.\logs\2024-12-09_logfile.txt'
 2024-12-09 13:47:41.6388 Debug FileTarget(Name=logfile): Creating file appender: 'E:\CompanyEmployee\CompanyEmployee\bin\Debug\net9.0\.\logs\2024-12-09_logfile.txt'
 2024-12-09 13:47:41.6388 Trace FileTarget(Name=logfile): Opening E:\CompanyEmployee\CompanyEmployee\bin\Debug\net9.0\.\logs\2024-12-09_logfile.txt with allowFileSharedWriting=False
+2024-12-09 14:17:48.0687 Info AppDomain Shutting down. LogFactory closing...
+2024-12-09 14:17:48.0687 Debug Stop watching file-filter 'nlog.config' in directory: E:\CompanyEmployee\CompanyEmployee
+2024-12-09 14:17:48.0749 Trace Flushing all 1 targets...
+2024-12-09 14:17:48.0749 Trace ForEachItemInParallel() 1 items
+2024-12-09 14:17:48.0749 Trace FileTarget(Name=logfile): FlushAsync
+2024-12-09 14:17:48.0749 Trace Continuation invoked: 
+2024-12-09 14:17:48.0749 Trace Parallel task completed. 0 items remaining
+2024-12-09 14:17:48.0749 Debug Flush completed
+2024-12-09 14:17:48.0963 Trace FileTarget(Name=logfile): FlushAsync Done
+2024-12-09 14:17:48.0963 Debug Closing logging configuration...
+2024-12-09 14:17:48.0963 Trace Closing FileTarget(Name=logfile)
+2024-12-09 14:17:48.0963 Debug FileTarget(Name=logfile): Closing...
+2024-12-09 14:17:48.0963 Trace FileTarget(Name=logfile): FinalizeFile 'E:\CompanyEmployee\CompanyEmployee\bin\Debug\net9.0\.\logs\2024-12-09_logfile.txt, isArchiving: False'
+2024-12-09 14:17:48.0963 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'E:\CompanyEmployee\CompanyEmployee\bin\Debug\net9.0\.\logs\2024-12-09_logfile.txt'
+2024-12-09 14:17:48.1027 Trace FileTarget: Closing 'E:\CompanyEmployee\CompanyEmployee\bin\Debug\net9.0\.\logs\2024-12-09_logfile.txt'
+2024-12-09 14:17:48.1027 Debug FileTarget(Name=logfile): Closed.
+2024-12-09 14:17:48.1027 Trace Closing .\logs\${shortdate}_logfile.txt
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${literal}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${shortdate}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${literal}
+2024-12-09 14:17:48.1027 Trace Closing ${longdate} ${level:uppercase=true} ${message}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${longdate}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${literal}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${level}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${literal}
+2024-12-09 14:17:48.1027 Trace Closing Layout Renderer: ${message}
+2024-12-09 14:17:48.1027 Debug Finished closing logging configuration.
+2024-12-09 14:17:48.1027 Info LogFactory has been closed.
