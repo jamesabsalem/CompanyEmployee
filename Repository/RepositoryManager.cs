@@ -2,23 +2,15 @@
 
 namespace Repository
 {
-    public sealed class RepositoryManager : IRepositoryManager
+    public sealed class RepositoryManager(RepositoryContext repositoryContext) : IRepositoryManager
     {
-        private readonly RepositoryContest _repositoryContest;
-        private readonly Lazy<ICompanyRepository> _companyRepository;
-        private readonly Lazy<IEmployeeRepository> _employeeRepository;
-
-        public RepositoryManager(RepositoryContest repositoryContest)
-        {
-            _repositoryContest = repositoryContest;
-            _companyRepository = new Lazy<ICompanyRepository>(() => new CompanyRepository(repositoryContest));
-            _employeeRepository = new Lazy<IEmployeeRepository>(() => new EmployeeRepository(repositoryContest));
-        }
+        private readonly Lazy<ICompanyRepository> _companyRepository = new(() => new CompanyRepository(repositoryContext));
+        private readonly Lazy<IEmployeeRepository> _employeeRepository = new(() => new EmployeeRepository(repositoryContext));
 
         public ICompanyRepository Company => _companyRepository.Value;
 
         public IEmployeeRepository Employee => _employeeRepository.Value;
 
-        public void Save() => _repositoryContest.SaveChanges();
+        public void Save() => repositoryContext.SaveChanges();
     }
 }

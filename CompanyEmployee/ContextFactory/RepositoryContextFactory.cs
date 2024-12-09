@@ -4,20 +4,20 @@ using Repository;
 
 namespace CompanyEmployee.ContextFactory
 {
-    public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryContest>
+    public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryContext>
     {
-        public RepositoryContest CreateDbContext(string[] args)
+        public RepositoryContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var builder = new DbContextOptionsBuilder<RepositoryContest>()
+            var builder = new DbContextOptionsBuilder<RepositoryContext>()
                 .UseSqlServer(configuration.GetConnectionString("sqlConnection"),
                 b => b.MigrationsAssembly("CompanyEmployee"));
 
-            return new RepositoryContest(builder.Options);
+            return new RepositoryContext(builder.Options);
         }
     }
 }

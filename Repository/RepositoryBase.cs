@@ -1,34 +1,44 @@
-﻿using Contracts;
+﻿using System.Linq.Expressions;
+using Contracts;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
-namespace Repository
+namespace Repository;
+
+public class RepositoryBase<T>(RepositoryContext repositoryContext) : IRepositoryBase<T>
+    where T : class
 {
-    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    protected RepositoryContext RepositoryContext = repositoryContext;
+
+    public IQueryable<T> FindAll(bool trackChanges)
     {
-        protected RepositoryContest RepositoryContest;
+        return !trackChanges
+            ? RepositoryContext.Set<T>()
+                .AsNoTracking()
+            : RepositoryContext.Set<T>();
+    }
 
-        public RepositoryBase(RepositoryContest repositoryContest) 
-            => this.RepositoryContest = repositoryContest;
+    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges)
+    {
+        return !trackChanges
+            ? RepositoryContext.Set<T>()
+                .Where(expression)
+                .AsNoTracking()
+            : RepositoryContext.Set<T>()
+                .Where(expression);
+    }
 
-        public IQueryable<T> FindAll(bool trackChanges) =>
-            !trackChanges ?
-            RepositoryContest.Set<T>()
-            .AsNoTracking() :
-            RepositoryContest.Set<T>();
+    public void Create(T entity)
+    {
+        RepositoryContext.Set<T>().Add(entity);
+    }
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges) =>
-            !trackChanges ?
-            RepositoryContest.Set<T>()
-            .Where(expression)
-            .AsNoTracking() :
-             RepositoryContest.Set<T>()
-            .Where(expression);
+    public void Update(T entity)
+    {
+        RepositoryContext.Set<T>().Update(entity);
+    }
 
-        public void Create(T entity) => RepositoryContest.Set<T>().Add(entity);
-
-        public void Update(T entity) => RepositoryContest.Set<T>().Update(entity);
-
-        public void Delete(T entity) => RepositoryContest.Set<T>().Remove(entity);
+    public void Delete(T entity)
+    {
+        RepositoryContext.Set<T>().Remove(entity);
     }
 }

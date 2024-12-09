@@ -10,7 +10,7 @@ using Repository;
 
 namespace CompanyEmployee.Migrations
 {
-    [DbContext(typeof(RepositoryContest))]
+    [DbContext(typeof(RepositoryContext))]
     partial class RepositoryContestModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

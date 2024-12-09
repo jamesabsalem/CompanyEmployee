@@ -11,7 +11,7 @@ using Repository;
 
 namespace CompanyEmployee.Migrations
 {
-    [DbContext(typeof(RepositoryContest))]
+    [DbContext(typeof(RepositoryContext))]
     [Migration("20241209085341_DatabaseCreation")]
     partial class DatabaseCreation
     {

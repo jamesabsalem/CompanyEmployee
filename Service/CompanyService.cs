@@ -1,31 +1,25 @@
-﻿using Contracts;
-using Entities.Models;
+﻿using AutoMapper;
+using Contracts;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
-namespace Service
+namespace Service;
+
+internal sealed class CompanyService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+    : ICompanyService
 {
-    internal sealed class CompanyService: ICompanyService
+    public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
     {
-        private readonly IRepositoryManager  _repository;
-        private readonly ILoggerManager _logger;
-        public CompanyService(IRepositoryManager repository, ILoggerManager logger)
+        try
         {
-            _repository = repository;
-            _logger = logger;
+            var companies = repository.Company.GetAllCompanies(trackChanges);
+            var companiesDto = mapper.Map<IEnumerable<CompanyDto>>(companies);
+            return companiesDto;
         }
-
-        public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+        catch (Exception ex)
         {
-            try
-            {
-                var companies = _repository.Company.GetAllCompanies(trackChanges);
-                return companies;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetAllCompanies)} service method {ex}");
-                throw;
-            }
+            logger.LogError($"Something went wrong in the {nameof(GetAllCompanies)} service method {ex}");
+            throw;
         }
     }
 }
