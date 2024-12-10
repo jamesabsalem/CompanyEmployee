@@ -13,8 +13,8 @@ public class MappingProfile : Profile
         //        opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
 
         CreateMap<Company, CompanyDto>()
-            .ForCtorParam("FullAddress",
-                opt => opt.MapFrom((src, dest) => $"{src.Address} {src.Country}"));
+            .ForMember(dest => dest.FullAddress, 
+                opt => opt.MapFrom(src => $"{src.Address} {src.Country}"));
 
         CreateMap<Employee, EmployeeDto>();
 
