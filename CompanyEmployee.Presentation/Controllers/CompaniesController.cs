@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CompanyEmployee.Presentation.ModelBinders;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -42,4 +43,31 @@ public class CompaniesController(IServiceManager services) : ControllerBase
 
         return CreatedAtRoute("CompanyById", new { id = createdCompany.Id }, createdCompany);
     }
+
+    [HttpGet("collection/({ids})", Name = "CompanyCollection")]
+    public IActionResult GetCompanyCollection([ModelBinder(BinderType =
+        typeof(ArrayModelBinder))]IEnumerable<Guid> ids)
+    {
+        if (ids == null || !ids.Any())
+            return BadRequest("Ids parameter is null or empty.");
+
+        var companies = services.CompanyService.GetByIds(ids, trackChanges: false);
+
+        if (companies == null || !companies.Any())
+            return NotFound("No companies found for the provided ids.");
+
+        return Ok(companies);
+    }
+
+    [HttpPost("collection")]
+    public IActionResult CreateCompanyCollection([FromBody] IEnumerable<CompanyForCreationDto> companyCollection)
+    {
+        if (companyCollection == null || !companyCollection.Any())
+            return BadRequest("Company collection is null or empty.");
+
+        var result = services.CompanyService.CreateCompanyCollection(companyCollection);
+
+        return CreatedAtRoute("CompanyCollection", new { ids = string.Join(",", result.ids) }, result.companies);
+    }
+
 }
