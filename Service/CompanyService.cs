@@ -14,4 +14,11 @@ internal sealed class CompanyService(IRepositoryManager repository, ILoggerManag
         var companiesDto = mapper.Map<IEnumerable<CompanyDto>>(companies);
         return companiesDto;
     }
+
+    public CompanyDto GetCompany(Guid id, bool trackChanges)
+    {
+        var company = repository.Company.GetCompany(id, trackChanges);
+        var companyDto = mapper.Map<CompanyDto>(company);
+        return companyDto;
+    }
 }
