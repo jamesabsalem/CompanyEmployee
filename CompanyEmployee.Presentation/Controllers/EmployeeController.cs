@@ -31,4 +31,11 @@ public class EmployeeController(IServiceManager services) : ControllerBase
 
         return CreatedAtAction("GetEmployeeForCompany", new { companyId, id = employeeToReturn.Id }, employeeToReturn);
     }
+
+    [HttpDelete("{id:guid}")]
+    public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
+    {
+        services.EmployeeService.DeleteEmployeeForCompany(companyId,id,trackChanges:false);
+        return NoContent();
+    }
 }
