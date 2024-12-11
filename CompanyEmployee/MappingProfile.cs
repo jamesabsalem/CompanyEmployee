@@ -16,6 +16,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.FullAddress, 
                 opt => opt.MapFrom(src => $"{src.Address} {src.Country}"));
         CreateMap<CompanyForCreationDto, Company>();
+        CreateMap<CompanyForUpdateDto, Company>();
 
         CreateMap<Employee, EmployeeDto>();
         CreateMap<EmployeeForCreationDto, Employee>();
