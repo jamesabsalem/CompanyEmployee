@@ -8,8 +8,31 @@ namespace Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
-            builder.HasData
-                (
+            builder.HasKey(e => e.Id);
+            // Validation
+            builder.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(30)
+                .HasAnnotation("ErrorMessage", "Employee name is a required field and must be at most 30 characters long.");
+
+            builder.Property(e => e.Age)
+                .IsRequired()
+                .HasAnnotation("ErrorMessage", "Age is a required field.");
+
+            builder.Property(e => e.Position)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasAnnotation("ErrorMessage", "Position is a required field and must be at most 20 characters long.");
+
+            // Relationships
+            builder.HasOne(e => e.Company)
+                .WithMany(c => c.Employees)
+                .IsRequired()
+                .HasForeignKey(e => e.CompanyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Seed data
+            builder.HasData(
                 new Employee
                 {
                     Id = new Guid("025cd8ff-04aa-4a36-8c95-f69376f842a7"),
@@ -34,7 +57,7 @@ namespace Repository.Configuration
                     Position = "Administrator",
                     CompanyId = new Guid("b42606ee-bc60-49de-bbaf-9eb38cbd419c")
                 }
-                );
+            );
         }
     }
 }

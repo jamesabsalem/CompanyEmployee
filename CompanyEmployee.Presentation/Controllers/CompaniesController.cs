@@ -70,4 +70,11 @@ public class CompaniesController(IServiceManager services) : ControllerBase
         return CreatedAtRoute("CompanyCollection", new { ids = string.Join(",", result.ids) }, result.companies);
     }
 
+    [HttpDelete("{id:guid}")]
+    public IActionResult DeleteCompany(Guid id)
+    {
+        services.CompanyService.DeleteCompany(id, trackChanges: false);
+        return NoContent();
+    }
+
 }

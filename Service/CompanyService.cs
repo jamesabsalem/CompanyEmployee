@@ -69,4 +69,14 @@ internal sealed class CompanyService(IRepositoryManager repository, ILoggerManag
         var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
         return (companies: companyCollectionToReturn, ids: ids);
     }
+
+    public void DeleteCompany(Guid companyId, bool trackChanges)
+    {
+        var company = repository.Company.GetCompany(companyId, trackChanges);
+        if (company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        repository.Company.DeleteCompany(company);
+        repository.Save();
+    }
 }

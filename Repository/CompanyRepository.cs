@@ -1,23 +1,36 @@
 ﻿using Contracts;
 using Entities.Models;
 
-namespace Repository
+namespace Repository;
+
+public class CompanyRepository(RepositoryContext repositoryContext)
+    : RepositoryBase<Company>(repositoryContext), ICompanyRepository
 {
-    public class CompanyRepository(RepositoryContext repositoryContext)
-        : RepositoryBase<Company>(repositoryContext), ICompanyRepository
+    public IEnumerable<Company> GetAllCompanies(bool trackChanges)
     {
-        public IEnumerable<Company> GetAllCompanies(bool trackChanges) => 
-            FindAll(trackChanges)
+        return FindAll(trackChanges)
             .OrderBy(c => c.Name)
             .ToList();
+    }
 
-        public Company? GetCompany(Guid companyId, bool trackChanges) =>
-            FindByCondition(c => c.Id.Equals(companyId), trackChanges)
-                .SingleOrDefault();
+    public Company? GetCompany(Guid companyId, bool trackChanges)
+    {
+        return FindByCondition(c => c.Id.Equals(companyId), trackChanges)
+            .SingleOrDefault();
+    }
 
-        public void CreateCompany(Company company) => Create(company);
+    public void CreateCompany(Company company)
+    {
+        Create(company);
+    }
 
-        public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
-            FindByCondition(x => ids.Contains(x.Id), trackChanges);
+    public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges)
+    {
+        return FindByCondition(x => ids.Contains(x.Id), trackChanges);
+    }
+
+    public void DeleteCompany(Company company)
+    {
+        Delete(company);
     }
 }

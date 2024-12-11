@@ -1,7 +1,6 @@
 ﻿using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Repository.Configuration
 {
@@ -9,6 +8,21 @@ namespace Repository.Configuration
     {
         public void Configure(EntityTypeBuilder<Company> builder)
         {
+            
+            // Validation
+            builder.HasKey(c => c.Id);
+
+            builder.Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(60)
+                .HasAnnotation("ErrorMessage", "Company name is a required field and must be at most 60 characters long.");
+
+            builder.Property(c => c.Address)
+                .IsRequired()
+                .HasMaxLength(60)
+                .HasAnnotation("ErrorMessage", "Company address is a required field and must be at most 60 characters long.");
+
+            // Seed data
             builder.HasData(
                 new Company
                 {
