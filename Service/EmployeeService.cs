@@ -63,4 +63,19 @@ internal sealed class EmployeeService(IRepositoryManager repository, ILoggerMana
         repository.Employee.DeleteEmployee(employeeForCompany);
         repository.Save();
     }
+
+    public void UpdateEmployeeForCompany(Guid companyId, Guid id, EmployeeForUpdateDto employeeForUpdate, bool comTrackChanges,
+        bool empTrackChanges)
+    {
+        var company = repository.Company.GetCompany(companyId, comTrackChanges);
+        if(company is null)
+            throw new CompanyNotFoundException(companyId);
+
+        var employeeEntity = repository.Employee.GetEmployee(companyId, id, empTrackChanges);
+        if (employeeEntity is null)
+            throw new EmployeeNotFoundException(id);
+
+        mapper.Map(employeeForUpdate, employeeEntity);
+        repository.Save();
+    }
 }

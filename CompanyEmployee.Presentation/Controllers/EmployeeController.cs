@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Xml.Xsl;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -36,6 +37,18 @@ public class EmployeeController(IServiceManager services) : ControllerBase
     public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
     {
         services.EmployeeService.DeleteEmployeeForCompany(companyId,id,trackChanges:false);
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}")]
+    public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
+    {
+        if (employee is null)
+            return BadRequest("EmployeeForUpdateDto object is null");
+
+        services.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, comTrackChanges: false,
+            empTrackChanges: true);
+
         return NoContent();
     }
 }
