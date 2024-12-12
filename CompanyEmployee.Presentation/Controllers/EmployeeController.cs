@@ -1,4 +1,4 @@
-﻿using System.Xml.Xsl;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -12,9 +12,10 @@ public class EmployeeController(IServiceManager services) : ControllerBase
     [HttpGet]
     public IActionResult GetEmployeesForCompany(Guid companyId)
     {
-        var employees = services.EmployeeService.GetEmployee(companyId, trackChanges: false);
+        var employees = services.EmployeeService.GetEmployee(companyId, false);
         return Ok(employees);
     }
+
     [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]
     public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
     {
@@ -36,7 +37,7 @@ public class EmployeeController(IServiceManager services) : ControllerBase
     [HttpDelete("{id:guid}")]
     public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
     {
-        services.EmployeeService.DeleteEmployeeForCompany(companyId,id,trackChanges:false);
+        services.EmployeeService.DeleteEmployeeForCompany(companyId, id, false);
         return NoContent();
     }
 
@@ -46,9 +47,21 @@ public class EmployeeController(IServiceManager services) : ControllerBase
         if (employee is null)
             return BadRequest("EmployeeForUpdateDto object is null");
 
-        services.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, comTrackChanges: false,
-            empTrackChanges: true);
+        services.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee, false,
+            true);
 
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}")]
+    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
+        [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
+    {
+        if (patchDoc is null) return BadRequest("patchDoc object sent from client is null.");
+        var result =
+            services.EmployeeService.GetEmployeeForPatch(companyId, id, compTrackChanges: false, empTrackChanges: true);
+        patchDoc.ApplyTo(result.employeeToPatch);
+        services.EmployeeService.SaveChangesForPatch(result.employeeToPatch, result.employeeEntity);
         return NoContent();
     }
 }
