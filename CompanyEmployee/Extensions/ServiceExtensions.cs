@@ -17,7 +17,8 @@ public static class ServiceExtensions
             option.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader());
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("X-Pagination"));
         });
     }
 
