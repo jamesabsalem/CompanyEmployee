@@ -15,7 +15,11 @@ internal sealed class EmployeeService(IRepositoryManager repository, ILoggerMana
     public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId,
         EmployeeParameters employeeParameters, bool trackChanges)
     {
+        if (!employeeParameters.ValidAgeRange)
+            throw new MaxAgeRangeBadRequestException();
+
         await CheckIfCompanyExists(companyId, trackChanges);
+
         var employeesWithMetaData = await repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
         var employeesDto = mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
         return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
