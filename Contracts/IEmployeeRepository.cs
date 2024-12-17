@@ -1,6 +1,5 @@
 ﻿using Entities.Models;
 using Shared.RequestFeatures;
-using Shared.RequestFeatures.MetaData;
 
 namespace Contracts
 {

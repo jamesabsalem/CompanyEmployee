@@ -1,4 +1,4 @@
-﻿namespace Shared.RequestFeatures.MetaData;
+﻿namespace Shared.RequestFeatures;
 
 public class MetaData
 {

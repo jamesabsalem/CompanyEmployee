@@ -3,55 +3,43 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
 using Shared.DataTransferObjects;
 
-namespace CompanyEmployee
+namespace CompanyEmployee;
+
+public class CsvOutputFormatter : TextOutputFormatter
 {
-    public class CsvOutputFormatter : TextOutputFormatter
+    public CsvOutputFormatter()
     {
-        public CsvOutputFormatter()
-        {
-            SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/csv"));
-            SupportedEncodings.Add(Encoding.UTF8);
-            SupportedEncodings.Add(Encoding.Unicode);
-        }
+        SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/csv"));
+        SupportedEncodings.Add(Encoding.UTF8);
+        SupportedEncodings.Add(Encoding.Unicode);
+    }
 
-        protected override bool CanWriteType(Type? type)
-        {
-            return typeof(CompanyDto).IsAssignableFrom(type) ||
-                   typeof(IEnumerable<CompanyDto>).IsAssignableFrom(type) ||
-                   base.CanWriteType(type);
-        }
+    protected override bool CanWriteType(Type? type)
+    {
+        if (typeof(CompanyDto).IsAssignableFrom(type)
+            || typeof(IEnumerable<CompanyDto>).IsAssignableFrom(type))
+            return base.CanWriteType(type);
 
-        public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context, Encoding selectedEncoding)
-        {
-            var response = context.HttpContext.Response;
-            var buffer = new StringBuilder();
+        return false;
+    }
 
-            switch (context.Object)
-            {
-                case IEnumerable<CompanyDto> companies:
-                {
-                    foreach (var company in companies)
-                    {
-                        AppendCsvRow(buffer, company);
-                    }
+    public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context,
+        Encoding selectedEncoding)
+    {
+        var response = context.HttpContext.Response;
+        var buffer = new StringBuilder();
 
-                    break;
-                }
-                case CompanyDto company:
-                    AppendCsvRow(buffer, company);
-                    break;
-            }
+        if (context.Object is IEnumerable<CompanyDto>)
+            foreach (var company in (IEnumerable<CompanyDto>)context.Object)
+                FormatCsv(buffer, company);
+        else
+            FormatCsv(buffer, (CompanyDto)context.Object);
 
-            await response.WriteAsync(buffer.ToString(), selectedEncoding);
-        }
+        await response.WriteAsync(buffer.ToString());
+    }
 
-        private static void AppendCsvRow(StringBuilder buffer, CompanyDto company)
-        {
-            // Escaping any quotes in fields to ensure valid CSV formatting
-            var escapedName = company.Name?.Replace("\"", "\"\"");
-            var escapedAddress = company.FullAddress?.Replace("\"", "\"\"");
-
-            buffer.AppendLine($"{company.Id},\"{escapedName}\",\"{escapedAddress}\"");
-        }
+    private static void FormatCsv(StringBuilder buffer, CompanyDto company)
+    {
+        buffer.AppendLine($"{company.Id},\"{company.Name}\",\"{company.FullAddress}\"");
     }
 }
