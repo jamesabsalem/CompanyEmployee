@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
+using Entities.Responses;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -10,20 +11,7 @@ namespace Service;
 internal sealed class CompanyService(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
     : ICompanyService
 {
-    public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
-    {
-        var companies = await repository.Company.GetAllCompaniesAsync(trackChanges);
-        var companiesDto = mapper.Map<IEnumerable<CompanyDto>>(companies);
-        return companiesDto;
-    }
-
-    public async Task<CompanyDto> GetCompanyAsync(Guid id, bool trackChanges)
-    {
-        var company = await GetCompanyAndCheckIfItExists(id, trackChanges);
-        var companyDto = mapper.Map<CompanyDto>(company);
-        return companyDto;
-    }
-
+   
     public async Task<CompanyDto> CreateCompanyAsync(CompanyForCreationDto company)
     {
         var companyEntity = mapper.Map<Company>(company);
@@ -66,6 +54,21 @@ internal sealed class CompanyService(IRepositoryManager repository, ILoggerManag
         var company = await GetCompanyAndCheckIfItExists(companyId, trackChanges);
         mapper.Map(companyForUpdate, company);
         await repository.SaveAsync();
+    }
+
+    public ApiBaseResponse GetAllCompaniesAsync(bool trackChanges)
+    {
+        var companies = repository.Company.GetAllCompaniesAsync(trackChanges);
+        var companiesDto = mapper.Map<IEnumerable<CompanyDto>>(companies);
+        return new ApiOkResponse<IEnumerable<CompanyDto>>(companiesDto);
+    }
+
+    public ApiBaseResponse GetCompanyAsync(Guid id, bool trackChanges)
+    {
+        var company = repository.Company.GetCompanyAsync(id, trackChanges);
+        if (company is null) return new CompanyNotFoundResponse(id);
+        var companyDto = mapper.Map<CompanyDto>(company);
+        return new ApiOkResponse<CompanyDto>(companyDto);
     }
 
     private async Task<Company> GetCompanyAndCheckIfItExists(Guid id, bool trackChanges)

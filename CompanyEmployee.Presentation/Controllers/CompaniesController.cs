@@ -1,7 +1,7 @@
 ﻿using CompanyEmployee.Presentation.ActionFilters;
 using CompanyEmployee.Presentation.ModelBinders;
+using Entities.Responses;
 using Marvin.Cache.Headers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -11,22 +11,24 @@ namespace CompanyEmployee.Presentation.Controllers;
 [ApiVersion("1")]
 [ApiController]
 [Route("api/companies")]
-public class CompaniesController(IServiceManager service) : ControllerBase
+public class CompaniesController(IServiceManager service) : ApiControllerBase
 {
-    [HttpGet(Name = "GetCompanies")]
-    [Authorize]
-    public async Task<IActionResult> GetCompanies()
+    [HttpGet]
+    public IActionResult GetCompanies()
     {
-        var companies = await service.CompanyService.GetAllCompaniesAsync(false);
+        var baseResult = service.CompanyService.GetAllCompaniesAsync(false);
+        var companies = baseResult.GetResult<IEnumerable<CompanyDto>>();
         return Ok(companies);
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]
     [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
     [HttpCacheValidation(MustRevalidate = false)]
-    public async Task<IActionResult> GetCompany(Guid id)
+    public IActionResult GetCompany(Guid id)
     {
-        var company = await service.CompanyService.GetCompanyAsync(id, false);
+        var baseResult = service.CompanyService.GetCompanyAsync(id, false);
+        if (!baseResult.Success) return ProcessError(baseResult);
+        var company = ((ApiOkResponse<CompanyDto>)baseResult).Result;
         return Ok(company);
     }
 
