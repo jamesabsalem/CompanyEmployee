@@ -8,6 +8,7 @@
 
   <ItemGroup>
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
 	  <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 

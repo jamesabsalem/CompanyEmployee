@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository;
 
@@ -11,9 +12,11 @@ using Repository;
 namespace CompanyEmployee.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20241218084331_AddedRolesToDb1")]
+    partial class AddedRolesToDb1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,12 +175,6 @@ namespace CompanyEmployee.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -230,13 +227,13 @@ namespace CompanyEmployee.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f499d11f-587b-4000-8282-397331cf9f81",
+                            Id = "10d5a5c6-089b-49c7-b611-b4112ea5e1b6",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "f1569b29-5837-4ba5-b28c-dd4bdaf60ea9",
+                            Id = "0195343b-11a9-462e-9089-4e7ff330a6ed",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
