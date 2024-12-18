@@ -6,17 +6,12 @@ using Shared.DataTransferObjects;
 
 namespace CompanyEmployee.Presentation.Controllers;
 
-[Route("api/companies")]
+[ApiVersion("1")]
 [ApiController]
+[Route("api/companies")]
+
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
-    [HttpOptions]
-    public IActionResult GetCompaniesOptions()
-    {
-        Response.Headers.Add("Allow", "GET, OPTIONS, POST");
-        return Ok();
-    }
-
     [HttpGet(Name = "GetCompanies")]
     public async Task<IActionResult> GetCompanies()
     {
