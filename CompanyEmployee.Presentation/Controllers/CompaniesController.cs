@@ -10,7 +10,14 @@ namespace CompanyEmployee.Presentation.Controllers;
 [ApiController]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
-    [HttpGet]
+    [HttpOptions]
+    public IActionResult GetCompaniesOptions()
+    {
+        Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+        return Ok();
+    }
+
+    [HttpGet(Name = "GetCompanies")]
     public async Task<IActionResult> GetCompanies()
     {
         var companies = await service.CompanyService.GetAllCompaniesAsync(false);
@@ -33,7 +40,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
         return Ok(companies);
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateCompany")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
     {
